@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gulaev.dao.repository.AmazonProductRepository">
+
+  <resultMap id="productResultMap" type="com.gulaev.entity.AmazonProduct">
+    <id property="id" column="id" />
+    <result property="starRating" column="star_rating" />
+    <result property="title" column="title" />
+    <result property="rateCount" column="rate_count" />
+    <result property="asin" column="asin" />
+    <result property="uploadedOn" column="uploaded_on" />
+    <result property="shopName" column="shop_name" />
+    <result property="unitsTotal" column="units_total" />
+    <result property="price" column="price" />
+  </resultMap>
+
+  <select id="findProductsByDateRange" resultMap="productResultMap">
+    SELECT *
+    FROM products
+    WHERE DATE(uploaded_on) BETWEEN DATE(#{startDate}) AND DATE(#{endDate})
+  </select>
+
+  <select id="getProductsByDate" resultMap="productResultMap">
+    SELECT *
+    FROM products
+    WHERE DATE(uploaded_on) = DATE(#{date})
+  </select>
+
+  <select id="getMostRecentUploadDate" resultType="java.util.Date">
+    SELECT MAX(DATE(uploaded_on))
+    FROM products
+  </select>
+
+</mapper>
