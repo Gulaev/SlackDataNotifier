@@ -46,7 +46,7 @@
     <![CDATA[
     SELECT MAX(DATE(uploaded_on))
     FROM products
-    WHERE DATE(uploaded_on) < DATE(#{inputDate})
+    WHERE DATE(uploaded_on) < DATE(#{date})
     ]]>
   </select>
 
