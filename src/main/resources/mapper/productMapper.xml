@@ -31,4 +31,24 @@
     FROM products
   </select>
 
+  <select id="findProductByDate" resultMap="productResultMap">
+    SELECT *
+    FROM products
+    WHERE DATE(uploaded_on) = DATE(#{date})
+    AND title = #{product.title}
+    AND asin = #{product.asin}
+    AND shop_name = #{product.shopName}
+    AND price = #{product.price}
+    LIMIT 1
+  </select>
+
+  <select id="getMaxDateBeforeInputDate" resultType="java.util.Date">
+    <![CDATA[
+    SELECT MAX(DATE(uploaded_on))
+    FROM products
+    WHERE DATE(uploaded_on) < DATE(#{inputDate})
+    ]]>
+  </select>
+
+
 </mapper>

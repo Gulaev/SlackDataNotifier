@@ -1,8 +1,9 @@
-package com.gulaev.service;
+package com.gulaev.service.analysis;
 
 import com.gulaev.dao.implementation.AmazonProductRepositoryImpl;
 import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
+import com.gulaev.service.SendMessageService;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
