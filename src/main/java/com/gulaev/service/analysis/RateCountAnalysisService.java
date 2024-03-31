@@ -4,10 +4,8 @@ import com.gulaev.dao.implementation.AmazonProductRepositoryImpl;
 import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
 import com.gulaev.service.SendMessageService;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class RateCountAnalysisService {
 
@@ -21,35 +19,32 @@ public class RateCountAnalysisService {
 
   public void analyzeRateCountChanges() {
     Date currentDate = productRepository.getMostRecentUploadDate();
-
+    Date dateBeforeCurrent = productRepository.getMaxDateBeforeInputDate(currentDate);
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
+    List<AmazonProduct> productsByPreviousDate = productRepository.getProductsByDate(
+        dateBeforeCurrent);
 
     for (AmazonProduct currentProduct : currentProducts) {
-      Date currentUploadedDate = productRepository.getMostRecentUploadDate();
-      List<AmazonProduct> productsByPreviousDates = new ArrayList<>();
-      Integer currentRateCount = parseRateCount(currentProduct.getRateCount());
-      Double averageRateCountPreviousDates;
-      for (int i = 1; i <= 3; i++) {
-        currentUploadedDate = productRepository.getMaxDateBeforeInputDate(currentUploadedDate);
-        Optional<AmazonProduct> productByDate = productRepository
-            .findProductByDate(currentUploadedDate, currentProduct);
-        productByDate.ifPresent(productsByPreviousDates::add);
-      }
-      averageRateCountPreviousDates = productsByPreviousDates.stream()
-          .mapToInt(p -> parseRateCount(p.getRateCount())).average().orElse(Double.NaN);
+      for (AmazonProduct previousDateProduct : productsByPreviousDate) {
+        if (currentProduct.getTitle().equals(previousDateProduct.getTitle()) &&
+            currentProduct.getShopName().equals(previousDateProduct.getShopName()) &&
+            currentProduct.getAsin().equals(previousDateProduct.getAsin())) {
+          Integer currentRateCount = parseRateCount(currentProduct.getRateCount());
+          Integer previousRateCount = parseRateCount(previousDateProduct.getRateCount());
 
-      double percentageChange = ((averageRateCountPreviousDates -
-          currentRateCount) / currentRateCount) * 100;
+          int rateCountDifference = currentRateCount - previousRateCount;
 
-      if (Math.abs(percentageChange) > 20) {
-        String sign = percentageChange > 0 ? "+" : "";
-        String messageFormat = "Attention: The rate count change for yesterday is %s%.2f%%, which is beyond the +/-20%% threshold of the average of the last three days!%n by product https://www.%s/dp/%s";
-        String formattedMessage = String.format(messageFormat, sign, percentageChange,
-            currentProduct.getShopName().toLowerCase(), currentProduct.getAsin());
-        System.out.println(formattedMessage);
-        sendMessageService.sendMessage(formattedMessage);
-      } else {
-        System.out.println("The rate count change for yesterday is within normal limits.");
+          if (Math.abs(rateCountDifference) >= 20) {
+            String messageFormat = "Notice: Rate count has changed by %d for product: %s \nhttps://www.%s/dp/%s";
+            String formattedMessage = String.format(messageFormat,
+                rateCountDifference, currentProduct.getTitle(),
+                currentProduct.getShopName().toLowerCase(), currentProduct.getAsin());
+            System.out.println(formattedMessage);
+            sendMessageService.sendMessage(formattedMessage);
+          } else {
+            System.out.println("Rate count is normal");
+          }
+        }
       }
     }
   }

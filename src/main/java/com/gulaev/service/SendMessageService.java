@@ -11,8 +11,8 @@ public class SendMessageService {
 
   public void sendMessage(String message) {
     Slack slack = Slack.getInstance();
-//    String token = System.getenv("SLACK_");
-    MethodsClient methods = slack.methods("xoxb-6838897828131-6864457349584-cGyhieWiX4TVfYYbH1tYgOtR");
+    String token = System.getenv("SLACK_TOKEN");
+    MethodsClient methods = slack.methods(token);
     ChatPostMessageRequest request = ChatPostMessageRequest.builder()
         .channel("#random")
         .text(message)
