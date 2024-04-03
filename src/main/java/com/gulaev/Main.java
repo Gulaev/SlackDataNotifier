@@ -1,5 +1,6 @@
 package com.gulaev;
 
+import com.gulaev.service.analysis.ProductAnaizator;
 import com.gulaev.service.analysis.RateCountAnalysisService;
 import com.gulaev.service.analysis.SalesAnalysisService;
 import com.gulaev.service.analysis.StarRateAnalysisService;
@@ -10,8 +11,10 @@ public class Main {
     SalesAnalysisService salesAnalysisService = new SalesAnalysisService();
     RateCountAnalysisService rateCountAnalysisService = new RateCountAnalysisService();
     StarRateAnalysisService starRateAnalysisService = new StarRateAnalysisService();
-    salesAnalysisService.analyzeSalesChanges();
-    starRateAnalysisService.analyzeStarRate();
-    rateCountAnalysisService.analyzeRateCountChanges();
+    ProductAnaizator productAnaizator = new ProductAnaizator();
+    productAnaizator.startAnalysis();
+//    salesAnalysisService.analyzeSalesChanges();
+//    starRateAnalysisService.analyzeStarRate();
+//    rateCountAnalysisService.analyzeRateCountChanges();
   }
 }

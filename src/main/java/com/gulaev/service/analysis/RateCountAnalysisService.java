@@ -5,7 +5,10 @@ import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
 import com.gulaev.service.SendMessageService;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class RateCountAnalysisService {
 
@@ -17,35 +20,42 @@ public class RateCountAnalysisService {
     this.sendMessageService = new SendMessageService();
   }
 
-  public void analyzeRateCountChanges() {
+  public Map<Boolean, String> analyzeRateChangeForProduct(AmazonProduct currentProduct) {
     Date currentDate = productRepository.getMostRecentUploadDate();
     Date dateBeforeCurrent = productRepository.getMaxDateBeforeInputDate(currentDate);
-    List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
-    List<AmazonProduct> productsByPreviousDate = productRepository.getProductsByDate(
-        dateBeforeCurrent);
+//    List<AmazonProduct> productsByPreviousDate = productRepository.getProductsByDate(
+//        dateBeforeCurrent);
+    HashMap<Boolean, String> answer = new HashMap<>();
 
-    for (AmazonProduct currentProduct : currentProducts) {
-      for (AmazonProduct previousDateProduct : productsByPreviousDate) {
-        if (currentProduct.getTitle().equals(previousDateProduct.getTitle()) &&
-            currentProduct.getShopName().equals(previousDateProduct.getShopName()) &&
-            currentProduct.getAsin().equals(previousDateProduct.getAsin())) {
-          Integer currentRateCount = parseRateCount(currentProduct.getRateCount());
-          Integer previousRateCount = parseRateCount(previousDateProduct.getRateCount());
+    Optional<AmazonProduct> previousDateProduct = productRepository.
+        findProductByDate(dateBeforeCurrent, currentProduct);
 
-          int rateCountDifference = currentRateCount - previousRateCount;
+//        productsByPreviousDate.stream()
+//        .filter(p -> p.getAsin().equals(currentProduct.getAsin())
+//            && p.getTitle().equals(currentProduct.getTitle())
+//            && p.getShopName().equals(currentProduct.getShopName())).findFirst();
 
-          if (Math.abs(rateCountDifference) >= 20) {
-            String messageFormat = "Notice: Rate count has changed by %d for product: %s \nhttps://www.%s/dp/%s";
-            String formattedMessage = String.format(messageFormat,
-                rateCountDifference, currentProduct.getTitle(),
-                currentProduct.getShopName().toLowerCase(), currentProduct.getAsin());
-            System.out.println(formattedMessage);
-            sendMessageService.sendMessage(formattedMessage);
-          } else {
-            System.out.println("Rate count is normal");
-          }
-        }
-      }
+    if (!previousDateProduct.isPresent()) {
+      System.out.println("No comparison product found.");
+      answer.put(false, "No comparison product found.");
+      return answer;
+    }
+
+    Integer currentRateCount = parseRateCount(currentProduct.getRateCount());
+    Integer previousRateCount = parseRateCount(previousDateProduct.get().getRateCount());
+    int rateCountDifference = currentRateCount - previousRateCount;
+
+    if (Math.abs(rateCountDifference) >= 20) {
+      String messageFormat = "Notice: Rate count has changed by %d\n";
+      String formattedMessage = String.format(messageFormat,
+          rateCountDifference);
+      answer.put(true, formattedMessage);
+      return answer;
+    } else {
+      String stringAnswer = "Rate count is normal";
+      System.out.println(stringAnswer);
+      answer.put(false, stringAnswer);
+      return answer;
     }
   }
 

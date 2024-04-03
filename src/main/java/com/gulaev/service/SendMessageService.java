@@ -11,10 +11,10 @@ public class SendMessageService {
 
   public void sendMessage(String message) {
     Slack slack = Slack.getInstance();
-    String token = System.getenv("SLACK_TOKEN");
-    MethodsClient methods = slack.methods(token);
+    String tokenMock = System.getenv("SLACK_TOKEN");
+    MethodsClient methods = slack.methods(tokenMock);
     ChatPostMessageRequest request = ChatPostMessageRequest.builder()
-        .channel("#random")
+        .channel("C06S5KF4YMU")
         .text(message)
         .build();
 

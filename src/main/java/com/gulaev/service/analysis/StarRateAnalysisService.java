@@ -5,7 +5,10 @@ import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
 import com.gulaev.service.SendMessageService;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class StarRateAnalysisService {
 
@@ -17,26 +20,33 @@ public class StarRateAnalysisService {
     this.sendMessageService = new SendMessageService();
   }
 
-  public void analyzeStarRate() {
+
+  public Map<Boolean, String> analyzeStarRateForProduct(AmazonProduct currentProduct) {
     Date currentDate = productRepository.getMostRecentUploadDate();
     Date beforeDate = productRepository.getMaxDateBeforeInputDate(currentDate);
-    List<AmazonProduct> productsByCurrentDate = productRepository.getProductsByDate(currentDate);
-    List<AmazonProduct> productsByPreviousDate = productRepository.getProductsByDate(beforeDate);
+    Optional<AmazonProduct> previousDateProductOpt = productRepository.findProductByDate(beforeDate, currentProduct);
+//        productRepository.getProductsByDate(beforeDate).stream()
+//        .filter(p -> p.getTitle().equals(currentProduct.getTitle()) && p.getShopName().equals(currentProduct.getShopName()))
+//        .findFirst();
 
-    for (AmazonProduct product : productsByCurrentDate) {
-      for (AmazonProduct previousDateProduct : productsByPreviousDate) {
-        if (product.getTitle().equals(previousDateProduct.getTitle()) &&
-            product.getShopName().equals(previousDateProduct.getShopName())) {
-          if (!product.getStarRating().equals(previousDateProduct.getStarRating())) {
-            String message = String.format(
-                "Star rating for product by link https://www.%s/dp/%s is different; it was %s, now it's %s",
-                product.getShopName().toLowerCase(), product.getAsin(),
-                previousDateProduct.getStarRating(), product.getStarRating());
-            sendMessageService.sendMessage(message);
-          }
-        }
+    HashMap<Boolean, String> answer = new HashMap<>();
+
+    if (previousDateProductOpt.isPresent()) {
+      AmazonProduct previousDateProduct = previousDateProductOpt.get();
+      if (!currentProduct.getStarRating().equals(previousDateProduct.getStarRating())) {
+        String message = String.format(
+            "The star rating has changed: it was %s, now %s \n",
+            previousDateProduct.getStarRating(), currentProduct.getStarRating());
+        answer.put(true, message);
+      } else {
+        answer.put(false, "Star rating is unchanged");
       }
+    } else {
+      answer.put(false, "Previous date product not found for");
     }
+
+    return answer;
   }
+
 
 }
