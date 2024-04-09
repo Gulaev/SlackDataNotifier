@@ -48,6 +48,7 @@ public class ProductAnaizator {
         message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
         message.append(String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
             currentProduct.getAsin()));
+        message.append(currentProduct.getSheetLink() + "\n");
         sendMessageService.sendMessage(message.toString());
         System.out.println(message);
       }

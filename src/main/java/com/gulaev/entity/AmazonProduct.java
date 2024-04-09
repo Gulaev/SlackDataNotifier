@@ -15,4 +15,6 @@ public class AmazonProduct {
   private String shopName;
   private Date uploadedOn;
   private String unitsTotal;
+  private String shopTitle;
+  private String sheetLink;
 }

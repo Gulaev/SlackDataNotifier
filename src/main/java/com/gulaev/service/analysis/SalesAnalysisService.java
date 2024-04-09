@@ -49,8 +49,8 @@ public class SalesAnalysisService {
         / averageUnitsTotalByPreviousDates) * 100;
 
     if (currentProductUnitsTotal < averageUnitsTotalByPreviousDates * 0.85) {
-      String messageFormat = "Attention: Yesterday's sales were %.2f%% below the average of the last three days!\n";
-      String formattedMessage = String.format(messageFormat, -percentageChange);
+      String messageFormat = "Attention: Yesterday's sales were %.2f%% below the average of the last three days! Units total: %s\n";
+      String formattedMessage = String.format(messageFormat, -percentageChange, currentProduct.getUnitsTotal());
       answer.put(true, formattedMessage);
     } else {
       String message = "Yesterday's sales were normal.";

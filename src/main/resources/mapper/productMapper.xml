@@ -12,6 +12,8 @@
     <result property="shopName" column="shop_name" />
     <result property="unitsTotal" column="units_total" />
     <result property="price" column="price" />
+    <result property="shopTitle" column="shop_title"/>
+    <result property="sheetLink" column="sheet_link"/>
   </resultMap>
 
   <select id="findProductsByDateRange" resultMap="productResultMap">
