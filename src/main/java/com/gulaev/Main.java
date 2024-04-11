@@ -1,20 +1,11 @@
 package com.gulaev;
 
-import com.gulaev.service.analysis.ProductAnaizator;
-import com.gulaev.service.analysis.RateCountAnalysisService;
-import com.gulaev.service.analysis.SalesAnalysisService;
-import com.gulaev.service.analysis.StarRateAnalysisService;
+import com.gulaev.service.analysis.ProductAnalizator;
 
 public class Main {
 
   public static void main(String[] args) {
-    SalesAnalysisService salesAnalysisService = new SalesAnalysisService();
-    RateCountAnalysisService rateCountAnalysisService = new RateCountAnalysisService();
-    StarRateAnalysisService starRateAnalysisService = new StarRateAnalysisService();
-    ProductAnaizator productAnaizator = new ProductAnaizator();
-    productAnaizator.startAnalysis();
-//    salesAnalysisService.analyzeSalesChanges();
-//    starRateAnalysisService.analyzeStarRate();
-//    rateCountAnalysisService.analyzeRateCountChanges();
+    ProductAnalizator productAnalizator = new ProductAnalizator();
+    productAnalizator.startAnalysis();
   }
 }

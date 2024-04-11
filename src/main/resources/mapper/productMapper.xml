@@ -40,7 +40,6 @@
     AND title = #{product.title}
     AND asin = #{product.asin}
     AND shop_name = #{product.shopName}
-    AND price = #{product.price}
     LIMIT 1
   </select>
 

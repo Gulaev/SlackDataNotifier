@@ -7,7 +7,7 @@ import com.gulaev.service.SendMessageService;
 import java.util.Date;
 import java.util.List;
 
-public class ProductAnaizator {
+public class ProductAnalizator {
 
   private RateCountAnalysisService rateCountAnalysisService;
   private SalesAnalysisService salesAnalysisService;
@@ -15,7 +15,7 @@ public class ProductAnaizator {
   private AmazonProductRepository productRepository;
   private SendMessageService sendMessageService;
 
-  public ProductAnaizator() {
+  public ProductAnalizator() {
     this.rateCountAnalysisService = new RateCountAnalysisService();
     this.salesAnalysisService = new SalesAnalysisService();
     this.starRateAnalysisService = new StarRateAnalysisService();
