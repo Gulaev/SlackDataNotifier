@@ -28,8 +28,8 @@ public class SendMessageService {
       System.out.printf(response.getError());
       throw new RuntimeException(e);
     }
-    System.out.println(request.toString());
-    System.out.println(response.toString());
+//    System.out.println(request.toString());
+//    System.out.println(response.toString());
   }
 
 }

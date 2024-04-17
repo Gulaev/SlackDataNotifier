@@ -24,9 +24,22 @@ public class ProductAnalizator {
   }
 
   public void startAnalysis() {
+    StringBuilder message = new StringBuilder();
+    message = analysisAmazonUs(message);
+    message = analysisAmazonUK(message);
+    message = analysisZoroms(message);
+    message = analysisKivals(message);
+    sendMessageService.sendMessage(message.toString());
+    System.out.println(message);
+  }
+
+  private StringBuilder analysisAmazonUs(StringBuilder message) {
+    message.append("\n\n╰┈➤ Mighty-X US\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
-    for (AmazonProduct currentProduct: currentProducts) {
+    List<AmazonProduct> usProducts = currentProducts.stream()
+        .filter(a -> a.getShopTitle().equals("Mighty-X US")).toList();
+    for (AmazonProduct currentProduct : usProducts) {
       var salesAnalysisResult =
           salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
       var rateCountAnalysisResult =
@@ -35,7 +48,6 @@ public class ProductAnalizator {
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
           starRatingAnalysisResult.containsKey(true)) {
-        StringBuilder message = new StringBuilder();
         if (salesAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
         }
@@ -46,12 +58,116 @@ public class ProductAnalizator {
           message.append(starRatingAnalysisResult.get(true));
         }
         message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-            currentProduct.getAsin()));
-        message.append(currentProduct.getSheetLink() + "\n");
-        sendMessageService.sendMessage(message.toString());
-        System.out.println(message);
+        message.append(
+            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
+                currentProduct.getAsin()));
+        message.append(currentProduct.getSheetLink()).append(" \n");
       }
     }
+    return message;
   }
+
+  private StringBuilder analysisAmazonUK(StringBuilder message) {
+    message.append("\n\n╰┈➤ Mighty-X UK\n");
+    Date currentDate = productRepository.getMostRecentUploadDate();
+    List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
+    List<AmazonProduct> usProducts = currentProducts.stream()
+        .filter(a -> a.getShopTitle().equals("Mighty-X UK")).toList();
+    for (AmazonProduct currentProduct : usProducts) {
+      var salesAnalysisResult =
+          salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
+      var rateCountAnalysisResult =
+          rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
+      var starRatingAnalysisResult =
+          starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
+          starRatingAnalysisResult.containsKey(true)) {
+        if (salesAnalysisResult.containsKey(true)) {
+          message.append(salesAnalysisResult.get(true));
+        }
+        if (rateCountAnalysisResult.containsKey(true)) {
+          message.append(rateCountAnalysisResult.get(true));
+        }
+        if (starRatingAnalysisResult.containsKey(true)) {
+          message.append(starRatingAnalysisResult.get(true));
+        }
+        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
+        message.append(
+            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
+                currentProduct.getAsin()));
+        message.append(currentProduct.getSheetLink()).append(" \n");
+      }
+    }
+    return message;
+  }
+
+  private StringBuilder analysisZoroms(StringBuilder message) {
+    message.append("\n\n╰┈➤ ZOROM'S\n");
+    Date currentDate = productRepository.getMostRecentUploadDate();
+    List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
+    List<AmazonProduct> usProducts = currentProducts.stream()
+        .filter(a -> a.getShopTitle().equals("ZOROM'S")).toList();
+    for (AmazonProduct currentProduct : usProducts) {
+      var salesAnalysisResult =
+          salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
+      var rateCountAnalysisResult =
+          rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
+      var starRatingAnalysisResult =
+          starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
+          starRatingAnalysisResult.containsKey(true)) {
+        if (salesAnalysisResult.containsKey(true)) {
+          message.append(salesAnalysisResult.get(true));
+        }
+        if (rateCountAnalysisResult.containsKey(true)) {
+          message.append(rateCountAnalysisResult.get(true));
+        }
+        if (starRatingAnalysisResult.containsKey(true)) {
+          message.append(starRatingAnalysisResult.get(true));
+        }
+        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
+        message.append(
+            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
+                currentProduct.getAsin()));
+        message.append(currentProduct.getSheetLink()).append(" \n");
+      }
+    }
+    return message;
+  }
+
+
+  private StringBuilder analysisKivals(StringBuilder message) {
+    message.append("\n\n╰┈➤ Kivals\n");
+    Date currentDate = productRepository.getMostRecentUploadDate();
+    List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
+    List<AmazonProduct> usProducts = currentProducts.stream()
+        .filter(a -> a.getShopTitle().equals("Kivals")).toList();
+    for (AmazonProduct currentProduct : usProducts) {
+      var salesAnalysisResult =
+          salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
+      var rateCountAnalysisResult =
+          rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
+      var starRatingAnalysisResult =
+          starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
+          starRatingAnalysisResult.containsKey(true)) {
+        if (salesAnalysisResult.containsKey(true)) {
+          message.append(salesAnalysisResult.get(true));
+        }
+        if (rateCountAnalysisResult.containsKey(true)) {
+          message.append(rateCountAnalysisResult.get(true));
+        }
+        if (starRatingAnalysisResult.containsKey(true)) {
+          message.append(starRatingAnalysisResult.get(true));
+        }
+        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
+        message.append(
+            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
+                currentProduct.getAsin()));
+        message.append(currentProduct.getSheetLink()).append(" \n");
+      }
+    }
+    return message;
+  }
+
 }
