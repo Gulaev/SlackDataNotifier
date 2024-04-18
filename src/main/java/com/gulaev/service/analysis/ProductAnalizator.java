@@ -48,20 +48,26 @@ public class ProductAnalizator {
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
           starRatingAnalysisResult.containsKey(true)) {
+        boolean ifSendMessage = false;
         if (salesAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
+          ifSendMessage = true;
         }
         if (rateCountAnalysisResult.containsKey(true)) {
           message.append(rateCountAnalysisResult.get(true));
+          ifSendMessage = true;
         }
         if (starRatingAnalysisResult.containsKey(true)) {
           message.append(starRatingAnalysisResult.get(true));
+          ifSendMessage = true;
         }
-        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(
-            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-                currentProduct.getAsin()));
-        message.append(currentProduct.getSheetLink()).append(" \n");
+        if (ifSendMessage) {
+          message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
+          message.append(
+              String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
+                  currentProduct.getAsin()));
+          message.append(currentProduct.getSheetLink()).append(" \n");
+        }
       }
     }
     return message;
