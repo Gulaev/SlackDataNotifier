@@ -13,6 +13,7 @@ public class ProductAnalizator {
   private SalesAnalysisService salesAnalysisService;
   private StarRateAnalysisService starRateAnalysisService;
   private AmazonProductRepository productRepository;
+  private SessionAnalysisService sessionAnalysisService;
   private SendMessageService sendMessageService;
 
   public ProductAnalizator() {
@@ -21,36 +22,43 @@ public class ProductAnalizator {
     this.starRateAnalysisService = new StarRateAnalysisService();
     this.productRepository = new AmazonProductRepositoryImpl();
     this.sendMessageService = new SendMessageService();
+    this.sessionAnalysisService = new SessionAnalysisService();
   }
 
   public void startAnalysis() {
-    StringBuilder message = new StringBuilder();
-    message = analysisAmazonUs(message);
-    message = analysisAmazonUK(message);
-    message = analysisZoroms(message);
-    message = analysisKivals(message);
-    sendMessageService.sendMessage(message.toString());
-    System.out.println(message);
+    analysisAmazonUs();
+    analysisAmazonUK();
+    analysisZoroms();
+    analysisKivals();
   }
 
-  private StringBuilder analysisAmazonUs(StringBuilder message) {
-    message.append("\n\n╰┈➤ Mighty-X US\n");
+  private void analysisAmazonUs() {
+    sendMessageService.sendMessage("\n\n╰┈➤ Mighty-X US\n");
+    System.out.println("\n\n╰┈➤ Mighty-X US\n");
+//    message.append("\n\n╰┈➤ Mighty-X US\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("Mighty-X US")).toList();
     for (AmazonProduct currentProduct : usProducts) {
+      StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
           salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
       var rateCountAnalysisResult =
           rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
       var starRatingAnalysisResult =
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      var sessionAnalysisServiceResult =
+          sessionAnalysisService.analyzeSessionChangesForProduct(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
-          starRatingAnalysisResult.containsKey(true)) {
+          starRatingAnalysisResult.containsKey(true) || sessionAnalysisServiceResult.containsKey(true)) {
         boolean ifSendMessage = false;
         if (salesAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
+          ifSendMessage = true;
+        }
+        if (sessionAnalysisServiceResult.containsKey(true)) {
+          message.append(sessionAnalysisServiceResult.get(true));
           ifSendMessage = true;
         }
         if (rateCountAnalysisResult.containsKey(true)) {
@@ -67,53 +75,73 @@ public class ProductAnalizator {
               String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
                   currentProduct.getAsin()));
           message.append(currentProduct.getSheetLink()).append(" \n");
+          sendMessageService.sendMessage(message.toString());
+          System.out.println(message);
         }
       }
     }
-    return message;
   }
 
-  private StringBuilder analysisAmazonUK(StringBuilder message) {
-    message.append("\n\n╰┈➤ Mighty-X UK\n");
+  private void analysisAmazonUK() {
+//    message.append("\n\n╰┈➤ Mighty-X UK\n");
+    System.out.println("\n\n╰┈➤ Mighty-X UK\n");
+    sendMessageService.sendMessage("\n\n╰┈➤ Mighty-X UK\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
-    List<AmazonProduct> usProducts = currentProducts.stream()
+    List<AmazonProduct> ukProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("Mighty-X UK")).toList();
-    for (AmazonProduct currentProduct : usProducts) {
+    for (AmazonProduct currentProduct : ukProducts) {
+      StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
           salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
       var rateCountAnalysisResult =
           rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
       var starRatingAnalysisResult =
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      var sessionAnalysisServiceResult =
+          sessionAnalysisService.analyzeSessionChangesForProduct(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
-          starRatingAnalysisResult.containsKey(true)) {
+          starRatingAnalysisResult.containsKey(true) || sessionAnalysisServiceResult.containsKey(true)) {
+        boolean ifSendMessage = false;
         if (salesAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
+          ifSendMessage = true;
+        }
+        if (sessionAnalysisServiceResult.containsKey(true)) {
+          message.append(sessionAnalysisServiceResult.get(true));
+          ifSendMessage = true;
         }
         if (rateCountAnalysisResult.containsKey(true)) {
           message.append(rateCountAnalysisResult.get(true));
+          ifSendMessage = true;
         }
         if (starRatingAnalysisResult.containsKey(true)) {
           message.append(starRatingAnalysisResult.get(true));
+          ifSendMessage = true;
         }
-        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(
-            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-                currentProduct.getAsin()));
-        message.append(currentProduct.getSheetLink()).append(" \n");
+        if (ifSendMessage) {
+          message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
+          message.append(
+              String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
+                  currentProduct.getAsin()));
+          message.append(currentProduct.getSheetLink()).append(" \n");
+          sendMessageService.sendMessage(message.toString());
+          System.out.println(message);
+        }
       }
     }
-    return message;
   }
 
-  private StringBuilder analysisZoroms(StringBuilder message) {
-    message.append("\n\n╰┈➤ ZOROM'S\n");
+  private void analysisZoroms() {
+//    message.append("\n\n╰┈➤ ZOROM'S\n");
+    System.out.println("\n\n╰┈➤ ZOROM'S\n");
+    sendMessageService.sendMessage("\n\n╰┈➤ ZOROM'S\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("ZOROM'S")).toList();
     for (AmazonProduct currentProduct : usProducts) {
+      StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
           salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
       var rateCountAnalysisResult =
@@ -136,19 +164,23 @@ public class ProductAnalizator {
             String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
                 currentProduct.getAsin()));
         message.append(currentProduct.getSheetLink()).append(" \n");
+        sendMessageService.sendMessage(message.toString());
+        System.out.println(message);
       }
     }
-    return message;
   }
 
 
-  private StringBuilder analysisKivals(StringBuilder message) {
-    message.append("\n\n╰┈➤ Kivals\n");
+  private void analysisKivals() {
+//    message.append("\n\n╰┈➤ Kivals\n");
+    System.out.println("\n\n╰┈➤ Kivals\n");
+    sendMessageService.sendMessage("\n\n╰┈➤ Kivals\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("Kivals")).toList();
     for (AmazonProduct currentProduct : usProducts) {
+      StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
           salesAnalysisService.analyzeSalesChangeForProduct(currentProduct);
       var rateCountAnalysisResult =
@@ -171,9 +203,10 @@ public class ProductAnalizator {
             String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
                 currentProduct.getAsin()));
         message.append(currentProduct.getSheetLink()).append(" \n");
+        sendMessageService.sendMessage(message.toString());
+        System.out.println(message);
       }
     }
-    return message;
   }
 
 }

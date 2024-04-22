@@ -14,6 +14,7 @@
     <result property="price" column="price" />
     <result property="shopTitle" column="shop_title"/>
     <result property="sheetLink" column="sheet_link"/>
+    <result property="session" column="sessions"/>
   </resultMap>
 
   <select id="findProductsByDateRange" resultMap="productResultMap">

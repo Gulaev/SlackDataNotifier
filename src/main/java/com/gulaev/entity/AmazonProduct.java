@@ -17,4 +17,5 @@ public class AmazonProduct {
   private String unitsTotal;
   private String shopTitle;
   private String sheetLink;
+  private String session;
 }
