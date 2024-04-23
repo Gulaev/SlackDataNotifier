@@ -33,7 +33,11 @@ public class SessionAnalysisService {
 
     HashMap<Boolean, String> answer = new HashMap<>();
     List<Double> sessionByPreviousDate = new ArrayList<>();
-    Double currentProductSession = Double.parseDouble(currentProduct.getSession());
+    String currentProductSessionString = currentProduct.getSession();
+    if (currentProductSessionString == null || currentProductSessionString.isEmpty()) {
+      return Collections.singletonMap(false, "Current product session data is not available.");
+    }
+    Double currentProductSession = Double.parseDouble(currentProductSessionString);
     Double averageSessionsTotalByPreviousDates;
     Date currentUploadedDate = dayBeforeAfter;
 
@@ -45,12 +49,19 @@ public class SessionAnalysisService {
 
       previousDateProduct.ifPresent(p -> {
         String session = p.getSession();
-        if (session != null) {
-          sessionByPreviousDate.add(Double.parseDouble(session));
+        if (session != null && !session.isEmpty()) {
+          try {
+            sessionByPreviousDate.add(Double.parseDouble(session));
+          } catch (NumberFormatException e) {
+
+          }
         }
       });
     }
 
+    if (sessionByPreviousDate.isEmpty()) {
+      return Collections.singletonMap(false, "No previous session data available for calculation.");
+    }
       // Calculate the average units sold in previous dates
       averageSessionsTotalByPreviousDates = sessionByPreviousDate.stream()
           .mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
