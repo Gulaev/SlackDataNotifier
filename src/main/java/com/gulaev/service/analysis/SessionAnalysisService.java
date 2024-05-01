@@ -24,8 +24,10 @@ public class SessionAnalysisService {
     Date currentDate = productRepository.getMostRecentUploadDate();
     Date currentDateBefore = productRepository.getMaxDateBeforeInputDate(currentDate);
     Date dayBeforeAfter = productRepository.getMaxDateBeforeInputDate(currentDateBefore);
+    Date dayBeforeAfterAfter = productRepository.getMaxDateBeforeInputDate(dayBeforeAfter);
+
     Optional<AmazonProduct> currentProductOptional =
-        productRepository.findProductByDate(currentDateBefore, product);
+        productRepository.findProductByDate(dayBeforeAfterAfter, product);
     if (currentProductOptional.isEmpty()) {
       return Collections.singletonMap(false, "No product data available for the specified date.");
     }
@@ -39,7 +41,7 @@ public class SessionAnalysisService {
     }
     Double currentProductSession = Double.parseDouble(currentProductSessionString);
     Double averageSessionsTotalByPreviousDates;
-    Date currentUploadedDate = dayBeforeAfter;
+    Date currentUploadedDate = dayBeforeAfterAfter;
 
     // Collect units sold on the previous dates
     for (int i = 1; i <= 3; i++) {
@@ -74,9 +76,9 @@ public class SessionAnalysisService {
       if (Math.abs(percentageChange) >= 15) {
         String messageFormat;
         if (percentageChange >= 15) {
-          messageFormat = "📈 Session increased by %.2f%% compared to the average! Sessions: %s For Date: %s\n";
+          messageFormat = "\\xE2\\x86\\x97 Session increased by %.2f%% compared to the average! Sessions: %s For Date: %s\n";
         } else {
-          messageFormat = "📉 Session decreased by %.2f%% compared to the average! Sessions: %s For Date: %s\n";
+          messageFormat = "\\xE2\\x86\\x98 Session decreased by %.2f%% compared to the average! Sessions: %s For Date: %s\n";
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedMessage = String.format(messageFormat, Math.abs(percentageChange),

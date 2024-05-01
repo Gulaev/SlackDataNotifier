@@ -15,6 +15,8 @@ public class ProductAnalizator {
   private AmazonProductRepository productRepository;
   private SessionAnalysisService sessionAnalysisService;
   private SendMessageService sendMessageService;
+  private RankAnalysisService rankAnalysisService;
+  private BestSellerRankAnalysisService sellerRankAnalysisService;
 
   public ProductAnalizator() {
     this.rateCountAnalysisService = new RateCountAnalysisService();
@@ -23,6 +25,8 @@ public class ProductAnalizator {
     this.productRepository = new AmazonProductRepositoryImpl();
     this.sendMessageService = new SendMessageService();
     this.sessionAnalysisService = new SessionAnalysisService();
+    this.rankAnalysisService = new RankAnalysisService();
+    this.sellerRankAnalysisService = new BestSellerRankAnalysisService();
   }
 
   public void startAnalysis() {
@@ -50,8 +54,13 @@ public class ProductAnalizator {
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
       var sessionAnalysisServiceResult =
           sessionAnalysisService.analyzeSessionChangesForProduct(currentProduct);
+      var rankAnalysisResult =
+          rankAnalysisService.analysisRank(currentProduct);
+      var sellerRankAnalysisResult =
+          sellerRankAnalysisService.bestSellerRankAnalysis(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
-          starRatingAnalysisResult.containsKey(true) || sessionAnalysisServiceResult.containsKey(true)) {
+          starRatingAnalysisResult.containsKey(true) || sessionAnalysisServiceResult.containsKey(true)
+          || rankAnalysisResult.containsKey(true) || sellerRankAnalysisResult.containsKey(true)) {
         boolean ifSendMessage = false;
         if (salesAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
@@ -69,11 +78,16 @@ public class ProductAnalizator {
           message.append(starRatingAnalysisResult.get(true));
           ifSendMessage = true;
         }
+        if (rankAnalysisResult.containsKey(true)) {
+          message.append(rankAnalysisResult.get(true));
+          ifSendMessage = true;
+        }
+        if (sellerRankAnalysisResult.containsKey(true)) {
+          message.append(sellerRankAnalysisResult.get(true));
+          ifSendMessage = true;
+        }
         if (ifSendMessage) {
           message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-          message.append(
-              String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-                  currentProduct.getAsin()));
           message.append(currentProduct.getSheetLink()).append(" \n");
           sendMessageService.sendMessage(message.toString());
           System.out.println(message);
@@ -100,8 +114,13 @@ public class ProductAnalizator {
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
       var sessionAnalysisServiceResult =
           sessionAnalysisService.analyzeSessionChangesForProduct(currentProduct);
+      var rankAnalysisResult =
+          rankAnalysisService.analysisRank(currentProduct);
+      var sellerRankAnalysisResult =
+          sellerRankAnalysisService.bestSellerRankAnalysis(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
-          starRatingAnalysisResult.containsKey(true) || sessionAnalysisServiceResult.containsKey(true)) {
+          starRatingAnalysisResult.containsKey(true) || sessionAnalysisServiceResult.containsKey(true)
+          || rankAnalysisResult.containsKey(true) || sellerRankAnalysisResult.containsKey(true)) {
         boolean ifSendMessage = false;
         if (salesAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
@@ -119,11 +138,15 @@ public class ProductAnalizator {
           message.append(starRatingAnalysisResult.get(true));
           ifSendMessage = true;
         }
+        if (rankAnalysisResult.containsKey(true)) {
+          message.append(rankAnalysisResult.get(true));
+          ifSendMessage = true;
+        }
+        if (sellerRankAnalysisResult.containsKey(true)) {
+          message.append(sellerRankAnalysisResult.get(true));
+        }
         if (ifSendMessage) {
           message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-          message.append(
-              String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-                  currentProduct.getAsin()));
           message.append(currentProduct.getSheetLink()).append(" \n");
           sendMessageService.sendMessage(message.toString());
           System.out.println(message);
@@ -148,9 +171,13 @@ public class ProductAnalizator {
           rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
       var starRatingAnalysisResult =
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      var rankAnalysisResult =
+          rankAnalysisService.analysisRank(currentProduct);
+      var sellerRankAnalysisResult =
+          sellerRankAnalysisService.bestSellerRankAnalysis(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
-          starRatingAnalysisResult.containsKey(true)) {
-        if (salesAnalysisResult.containsKey(true)) {
+          starRatingAnalysisResult.containsKey(true) || rankAnalysisResult.containsKey(true)) {
+        if (salesAnalysisResult.containsKey(true) || sellerRankAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
         }
         if (rateCountAnalysisResult.containsKey(true)) {
@@ -159,10 +186,13 @@ public class ProductAnalizator {
         if (starRatingAnalysisResult.containsKey(true)) {
           message.append(starRatingAnalysisResult.get(true));
         }
+        if (rankAnalysisResult.containsKey(true)) {
+          message.append(rankAnalysisResult.get(true));
+        }
+        if (sellerRankAnalysisResult.containsKey(true)) {
+          message.append(sellerRankAnalysisResult.get(true));
+        }
         message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(
-            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-                currentProduct.getAsin()));
         message.append(currentProduct.getSheetLink()).append(" \n");
         sendMessageService.sendMessage(message.toString());
         System.out.println(message);
@@ -187,9 +217,13 @@ public class ProductAnalizator {
           rateCountAnalysisService.analyzeRateChangeForProduct(currentProduct);
       var starRatingAnalysisResult =
           starRateAnalysisService.analyzeStarRateForProduct(currentProduct);
+      var rankAnalysisResult =
+          rankAnalysisService.analysisRank(currentProduct);
+      var sellerRankAnalysisResult =
+          sellerRankAnalysisService.bestSellerRankAnalysis(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
-          starRatingAnalysisResult.containsKey(true)) {
-        if (salesAnalysisResult.containsKey(true)) {
+          starRatingAnalysisResult.containsKey(true) || rankAnalysisResult.containsKey(true)) {
+        if (salesAnalysisResult.containsKey(true) || sellerRankAnalysisResult.containsKey(true)) {
           message.append(salesAnalysisResult.get(true));
         }
         if (rateCountAnalysisResult.containsKey(true)) {
@@ -198,15 +232,17 @@ public class ProductAnalizator {
         if (starRatingAnalysisResult.containsKey(true)) {
           message.append(starRatingAnalysisResult.get(true));
         }
+        if (rankAnalysisResult.containsKey(true)) {
+          message.append(rankAnalysisResult.get(true));
+        }
+        if (sellerRankAnalysisResult.containsKey(true)) {
+          message.append(sellerRankAnalysisResult.get(true));
+        }
         message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(
-            String.format("https://www.%s/dp/%s \n", currentProduct.getShopName().toLowerCase(),
-                currentProduct.getAsin()));
         message.append(currentProduct.getSheetLink()).append(" \n");
         sendMessageService.sendMessage(message.toString());
         System.out.println(message);
       }
     }
   }
-
 }

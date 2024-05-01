@@ -14,7 +14,9 @@
     <result property="price" column="price" />
     <result property="shopTitle" column="shop_title"/>
     <result property="sheetLink" column="sheet_link"/>
-    <result property="session" column="sessions"/>
+    <result property="sessions" column="sessions"/>
+    <result property="rank" column="rank"/>
+    <result property="bestSellerRank" column="best_seller_rank"/>
   </resultMap>
 
   <select id="findProductsByDateRange" resultMap="productResultMap">
