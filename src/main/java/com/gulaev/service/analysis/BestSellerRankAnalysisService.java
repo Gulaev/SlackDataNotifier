@@ -32,6 +32,7 @@ public class BestSellerRankAnalysisService {
     Map<String, Integer> currentCategories = parseCategories(currentProduct.getBestSellerRank());
     Map<String, Integer> previousDateCategories = parseCategories(previousDateProduct.get().getBestSellerRank());
 
+    StringBuilder answerText = new StringBuilder("");
     // Analysis of rank changes
     for (Map.Entry<String, Integer> entry : currentCategories.entrySet()) {
       String category = entry.getKey();
@@ -42,14 +43,15 @@ public class BestSellerRankAnalysisService {
         int rankChange = previousRank - currentRank;
         if (Math.abs(rankChange) >= 5) {
           if (rankChange > 0) {
-            answer.put(true, "Sharp decrease \n");
-            return answer;
+            answerText.append(String.format("Sharp decrease for %s = %s \n", category, currentRank));
           } else {
-            answer.put(true, "Sharp increase \n");
-            return answer;
+            answerText.append(String.format("Sharp increase for %s = %s \n", category, currentRank));
           }
         }
       }
+    }
+    if (!answerText.isEmpty()) {
+      answer.put(true, answerText.toString());
     }
 
     if (answer.isEmpty()) {
@@ -75,9 +77,10 @@ public class BestSellerRankAnalysisService {
       if (number.contains(" ")) {
         number = number.replace(" ", "");
       }
-      if (title.contains("(")) {
-        int indexStart = title.indexOf("(");
-        title = title.replace(title.substring(indexStart, title.length()), "");
+      if (title.contains("(See")) {
+//        int indexStart = title.indexOf("(");
+//        title = title.replace(title.substring(indexStart, title.length()), "");
+        continue;
       }
       int finalNumber = Integer.parseInt(number);
       categories.put(title, finalNumber);

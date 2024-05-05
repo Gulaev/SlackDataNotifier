@@ -48,9 +48,9 @@ public class SalesAnalysisService {
     if (Math.abs(percentageChange) >= 15) {
       String messageFormat;
       if (percentageChange >= 15) {
-        messageFormat = "\n📈 Sales increased by %.2f%% compared to the average! Units total: %s\n";
+        messageFormat = "\n📈 Sales increased by %.2f%% Units total: %s\n";
       } else {
-        messageFormat = "\n📉 Sales decreased by %.2f%% compared to the average! Units total: %s\n";
+        messageFormat = "\n📉 Sales decreased by %.2f%% Units total: %s\n";
       }
       String formattedMessage = String.format(messageFormat, Math.abs(percentageChange),
           currentProduct.getUnitsTotal());

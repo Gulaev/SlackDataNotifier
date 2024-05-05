@@ -40,7 +40,7 @@
     SELECT *
     FROM products
     WHERE DATE(uploaded_on) = DATE(#{date})
-    AND title = #{product.title}
+    AND sheet_link = #{product.sheetLink}
     AND asin = #{product.asin}
     AND shop_name = #{product.shopName}
     LIMIT 1

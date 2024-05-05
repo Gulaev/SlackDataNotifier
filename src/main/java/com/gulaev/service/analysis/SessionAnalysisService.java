@@ -76,9 +76,9 @@ public class SessionAnalysisService {
       if (Math.abs(percentageChange) >= 15) {
         String messageFormat;
         if (percentageChange >= 15) {
-          messageFormat = "\\xE2\\x86\\x97 Session increased by %.2f%% compared to the average! Sessions: %s For Date: %s\n";
+          messageFormat = "\uD83D\uDC4D Session increased by %.2f%% Sessions: %s For Date: %s\n";
         } else {
-          messageFormat = "\\xE2\\x86\\x98 Session decreased by %.2f%% compared to the average! Sessions: %s For Date: %s\n";
+          messageFormat = "\uD83D\uDC4E Session decreased by %.2f%% Sessions: %s For Date: %s\n";
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedMessage = String.format(messageFormat, Math.abs(percentageChange),

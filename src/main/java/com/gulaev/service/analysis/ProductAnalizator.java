@@ -39,7 +39,6 @@ public class ProductAnalizator {
   private void analysisAmazonUs() {
     sendMessageService.sendMessage("\n\n╰┈➤ Mighty-X US\n");
     System.out.println("\n\n╰┈➤ Mighty-X US\n");
-//    message.append("\n\n╰┈➤ Mighty-X US\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
@@ -87,8 +86,8 @@ public class ProductAnalizator {
           ifSendMessage = true;
         }
         if (ifSendMessage) {
-          message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-          message.append(currentProduct.getSheetLink()).append(" \n");
+          message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
+              currentProduct.getTitle()));
           sendMessageService.sendMessage(message.toString());
           System.out.println(message);
         }
@@ -97,7 +96,6 @@ public class ProductAnalizator {
   }
 
   private void analysisAmazonUK() {
-//    message.append("\n\n╰┈➤ Mighty-X UK\n");
     System.out.println("\n\n╰┈➤ Mighty-X UK\n");
     sendMessageService.sendMessage("\n\n╰┈➤ Mighty-X UK\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
@@ -146,8 +144,8 @@ public class ProductAnalizator {
           message.append(sellerRankAnalysisResult.get(true));
         }
         if (ifSendMessage) {
-          message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-          message.append(currentProduct.getSheetLink()).append(" \n");
+          message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
+              currentProduct.getTitle()));
           sendMessageService.sendMessage(message.toString());
           System.out.println(message);
         }
@@ -156,7 +154,6 @@ public class ProductAnalizator {
   }
 
   private void analysisZoroms() {
-//    message.append("\n\n╰┈➤ ZOROM'S\n");
     System.out.println("\n\n╰┈➤ ZOROM'S\n");
     sendMessageService.sendMessage("\n\n╰┈➤ ZOROM'S\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
@@ -192,8 +189,8 @@ public class ProductAnalizator {
         if (sellerRankAnalysisResult.containsKey(true)) {
           message.append(sellerRankAnalysisResult.get(true));
         }
-        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(currentProduct.getSheetLink()).append(" \n");
+        message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
+            currentProduct.getTitle()));
         sendMessageService.sendMessage(message.toString());
         System.out.println(message);
       }
@@ -202,7 +199,6 @@ public class ProductAnalizator {
 
 
   private void analysisKivals() {
-//    message.append("\n\n╰┈➤ Kivals\n");
     System.out.println("\n\n╰┈➤ Kivals\n");
     sendMessageService.sendMessage("\n\n╰┈➤ Kivals\n");
     Date currentDate = productRepository.getMostRecentUploadDate();
@@ -238,8 +234,8 @@ public class ProductAnalizator {
         if (sellerRankAnalysisResult.containsKey(true)) {
           message.append(sellerRankAnalysisResult.get(true));
         }
-        message.append(String.format("Product Title: %s \n", currentProduct.getTitle()));
-        message.append(currentProduct.getSheetLink()).append(" \n");
+        message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
+            currentProduct.getTitle()));
         sendMessageService.sendMessage(message.toString());
         System.out.println(message);
       }
