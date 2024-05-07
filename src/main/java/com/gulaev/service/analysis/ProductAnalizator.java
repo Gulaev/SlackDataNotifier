@@ -269,7 +269,8 @@ public class ProductAnalizator {
             "B06XQ8B8Y8", "B07HHL3W1M", "B09R83Z3JQ", "B0BPMMSQ13", "B08HZ5SMF4", "B07TW7STZY",
             "B01HQWDQ1E", "B071H9RYJX", "B07DXCGCHF", "B07BJ9K2WT", "B06XQZ12NH", "B07JLMKJGX",
             "B09R8355XC", "B09R851CL3", "B08J3VBG3Y", "B099S6CZLT", "B07R2D594Z", "B07XJPY5PZ",
-            "B076ZVLMYR", "B07R17G8PR", "B07BJB629Z", "B07BJ9VK6L", "B0BN8K48JH", "B0BNJ9FW5B"
+            "B076ZVLMYR", "B07R17G8PR", "B07BJB629Z", "B07BJ9VK6L", "B0BN8K48JH", "B0BNJ9FW5B",
+            "B07BHN9TFY"
         );
         break;
       case "ZOROM'S":
@@ -304,7 +305,6 @@ public class ProductAnalizator {
 
       sortedResults.forEach((asin, msg) -> {
         sendMessageService.sendMessage(msg);
-        System.out.println(asin);
         System.out.println(msg);
       });
     }
