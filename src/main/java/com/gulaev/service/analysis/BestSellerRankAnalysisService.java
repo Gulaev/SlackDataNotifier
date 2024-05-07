@@ -43,9 +43,11 @@ public class BestSellerRankAnalysisService {
         int rankChange = previousRank - currentRank;
         if (Math.abs(rankChange) >= 5) {
           if (rankChange > 0) {
-            answerText.append(String.format("Sharp decrease for %s = %s \n", category, currentRank));
+            answerText.append(String.format("Sharp decrease for %s = %s(-%s) \n", category,
+                currentRank, Math.abs(rankChange)));
           } else {
-            answerText.append(String.format("Sharp increase for %s = %s \n", category, currentRank));
+            answerText.append(String.format("Sharp increase for %s = %s(+%s) \n", category,
+                currentRank, Math.abs(rankChange)));
           }
         }
       }

@@ -4,8 +4,15 @@ import com.gulaev.dao.implementation.AmazonProductRepositoryImpl;
 import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
 import com.gulaev.service.SendMessageService;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProductAnalizator {
 
@@ -31,9 +38,9 @@ public class ProductAnalizator {
 
   public void startAnalysis() {
     analysisAmazonUs();
-    analysisAmazonUK();
     analysisZoroms();
     analysisKivals();
+    analysisAmazonUK();
   }
 
   private void analysisAmazonUs() {
@@ -43,6 +50,7 @@ public class ProductAnalizator {
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("Mighty-X US")).toList();
+    Map<String, String> result = new HashMap<>();
     for (AmazonProduct currentProduct : usProducts) {
       StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
@@ -88,11 +96,13 @@ public class ProductAnalizator {
         if (ifSendMessage) {
           message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
               currentProduct.getTitle()));
-          sendMessageService.sendMessage(message.toString());
-          System.out.println(message);
+          result.put(currentProduct.getAsin(), message.toString());
+//          sendMessageService.sendMessage(message.toString());
+//          System.out.println(message);
         }
       }
     }
+    sortByAsinAndSendMessage("US", result);
   }
 
   private void analysisAmazonUK() {
@@ -102,6 +112,7 @@ public class ProductAnalizator {
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> ukProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("Mighty-X UK")).toList();
+    Map<String, String> result = new HashMap<>();
     for (AmazonProduct currentProduct : ukProducts) {
       StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
@@ -146,11 +157,12 @@ public class ProductAnalizator {
         if (ifSendMessage) {
           message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
               currentProduct.getTitle()));
-          sendMessageService.sendMessage(message.toString());
-          System.out.println(message);
+//          sendMessageService.sendMessage(message.toString());
+//          System.out.println(message);
         }
       }
     }
+    sortByAsinAndSendMessage("UK", result);
   }
 
   private void analysisZoroms() {
@@ -160,6 +172,7 @@ public class ProductAnalizator {
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("ZOROM'S")).toList();
+    Map<String, String> result = new HashMap<>();
     for (AmazonProduct currentProduct : usProducts) {
       StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
@@ -191,10 +204,12 @@ public class ProductAnalizator {
         }
         message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
             currentProduct.getTitle()));
-        sendMessageService.sendMessage(message.toString());
-        System.out.println(message);
+        result.put(currentProduct.getAsin(), message.toString());
+//        sendMessageService.sendMessage(message.toString());
+//        System.out.println(message);
       }
     }
+    sortByAsinAndSendMessage("ZOROM'S", result);
   }
 
 
@@ -205,6 +220,7 @@ public class ProductAnalizator {
     List<AmazonProduct> currentProducts = productRepository.getProductsByDate(currentDate);
     List<AmazonProduct> usProducts = currentProducts.stream()
         .filter(a -> a.getShopTitle().equals("Kivals")).toList();
+    Map<String, String> result = new HashMap<>();
     for (AmazonProduct currentProduct : usProducts) {
       StringBuilder message = new StringBuilder();
       var salesAnalysisResult =
@@ -236,9 +252,61 @@ public class ProductAnalizator {
         }
         message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
             currentProduct.getTitle()));
-        sendMessageService.sendMessage(message.toString());
-        System.out.println(message);
+        result.put(currentProduct.getAsin(), message.toString());
+//        sendMessageService.sendMessage(message.toString());
+//        System.out.println(message);
       }
+    }
+    sortByAsinAndSendMessage("Kivals", result);
+  }
+
+  private void sortByAsinAndSendMessage(String shopName, Map<String, String> result) {
+    List<String> asinOrder;
+    switch (shopName) {
+      case "US":
+        asinOrder = Arrays.asList(
+            "B078Q32FXQ", "B078Q7WJSG", "B08J4G25JZ", "B08J3ZRTLQ", "B099S5CF9W", "B08HZ94M16",
+            "B06XQ8B8Y8", "B07HHL3W1M", "B09R83Z3JQ", "B0BPMMSQ13", "B08HZ5SMF4", "B07TW7STZY",
+            "B01HQWDQ1E", "B071H9RYJX", "B07DXCGCHF", "B07BJ9K2WT", "B06XQZ12NH", "B07JLMKJGX",
+            "B09R8355XC", "B09R851CL3", "B08J3VBG3Y", "B099S6CZLT", "B07R2D594Z", "B07XJPY5PZ",
+            "B076ZVLMYR", "B07R17G8PR", "B07BJB629Z", "B07BJ9VK6L", "B0BN8K48JH", "B0BNJ9FW5B"
+        );
+        break;
+      case "ZOROM'S":
+        asinOrder = Arrays.asList(
+            "B086692GCS", "B08X1XZC14", "B09R4WV42F", "B08X1YFHYJ", "B08X17XN1T", "B09R4WL9WP",
+            "B0895NXVPQ", "B08X15TN31"
+        );
+        break;
+      case "Kivals":
+        asinOrder = Arrays.asList(
+            "B0C1T5RNCH", "B0C2D7JYQT", "B0C1ZZ766Q", "B0C2D8MQS3"
+        );
+        break;
+      case "UK":
+        asinOrder = Arrays.asList(
+            "B078Q32FXQ", "B078Q7WJSG", "B08J4G25JZ", "B08J3ZRTLQ", "B06XQ8B8Y8", "B08HZ94M16",
+            "B07HHL3W1M", "B07R2D594Z"
+        );
+        break;
+      default:
+        asinOrder = new ArrayList<>();
+    }
+
+    if (!asinOrder.isEmpty()) {
+      Comparator<String> byAsinOrder = Comparator.comparingInt(asinOrder::indexOf);
+      Map<String, String> sortedResults = result.entrySet().stream()
+          .sorted(Map.Entry.comparingByKey(byAsinOrder))
+          .collect(Collectors.toMap(
+              Map.Entry::getKey,
+              Map.Entry::getValue,
+              (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+
+      sortedResults.forEach((asin, msg) -> {
+        sendMessageService.sendMessage(msg);
+        System.out.println(asin);
+        System.out.println(msg);
+      });
     }
   }
 }

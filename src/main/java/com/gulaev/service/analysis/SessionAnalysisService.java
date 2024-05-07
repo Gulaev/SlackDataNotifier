@@ -76,13 +76,13 @@ public class SessionAnalysisService {
       if (Math.abs(percentageChange) >= 15) {
         String messageFormat;
         if (percentageChange >= 15) {
-          messageFormat = "\uD83D\uDC4D Session increased by %.2f%% Sessions: %s For Date: %s\n";
+          messageFormat = "\uD83D\uDC4D Session increased by %.2f%% Sessions: %s\n";
         } else {
-          messageFormat = "\uD83D\uDC4E Session decreased by %.2f%% Sessions: %s For Date: %s\n";
+          messageFormat = "\uD83D\uDC4E Session decreased by %.2f%% Sessions: %s\n";
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedMessage = String.format(messageFormat, Math.abs(percentageChange),
-            currentProduct.getSession(), formatter.format(dayBeforeAfter));
+            currentProduct.getSession());
         answer.put(true, formattedMessage);
       } else {
         String message = "Session changes are within normal range.";
