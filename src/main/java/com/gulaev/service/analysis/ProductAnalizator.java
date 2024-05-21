@@ -157,6 +157,7 @@ public class ProductAnalizator {
         if (ifSendMessage) {
           message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
               currentProduct.getTitle()));
+          result.put(currentProduct.getAsin(), message.toString());
 //          sendMessageService.sendMessage(message.toString());
 //          System.out.println(message);
         }
@@ -185,6 +186,8 @@ public class ProductAnalizator {
           rankAnalysisService.analysisRank(currentProduct);
       var sellerRankAnalysisResult =
           sellerRankAnalysisService.bestSellerRankAnalysis(currentProduct);
+      var sessionAnalysisServiceResult =
+          sessionAnalysisService.analyzeSessionChangesForProduct(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
           starRatingAnalysisResult.containsKey(true) || rankAnalysisResult.containsKey(true)) {
         if (salesAnalysisResult.containsKey(true) || sellerRankAnalysisResult.containsKey(true)) {
@@ -201,6 +204,9 @@ public class ProductAnalizator {
         }
         if (sellerRankAnalysisResult.containsKey(true)) {
           message.append(sellerRankAnalysisResult.get(true));
+        }
+        if (sessionAnalysisServiceResult.containsKey(true)) {
+          message.append(sessionAnalysisServiceResult.get(true));
         }
         message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
             currentProduct.getTitle()));
@@ -233,6 +239,8 @@ public class ProductAnalizator {
           rankAnalysisService.analysisRank(currentProduct);
       var sellerRankAnalysisResult =
           sellerRankAnalysisService.bestSellerRankAnalysis(currentProduct);
+      var sessionAnalysisServiceResult =
+          sessionAnalysisService.analyzeSessionChangesForProduct(currentProduct);
       if (salesAnalysisResult.containsKey(true) || rateCountAnalysisResult.containsKey(true) ||
           starRatingAnalysisResult.containsKey(true) || rankAnalysisResult.containsKey(true)) {
         if (salesAnalysisResult.containsKey(true) || sellerRankAnalysisResult.containsKey(true)) {
@@ -249,6 +257,9 @@ public class ProductAnalizator {
         }
         if (sellerRankAnalysisResult.containsKey(true)) {
           message.append(sellerRankAnalysisResult.get(true));
+        }
+        if (sessionAnalysisServiceResult.containsKey(true)) {
+          message.append(sessionAnalysisServiceResult.get(true));
         }
         message.append(String.format("Product Title: <%s|%s> \n",currentProduct.getSheetLink(),
             currentProduct.getTitle()));
