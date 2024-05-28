@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gulaev.dao.repository.SheetsLinkRepository">
+
+  <resultMap id="sheetsLinkResultMap" type="com.gulaev.entity.SheetsLink">
+    <id property="id" column="id" />
+    <result property="asin" column="asin"/>
+    <result property="shopTitle" column="shop_title"/>
+    <result property="sheetLink" column="sheet_link"/>
+    <result property="srTitle" column="sr_title"/>
+  </resultMap>
+
+  <select id="getLinkByAsinAndShopTitle" resultMap="sheetsLinkResultMap">
+    SELECT id, asin, shop_title, sheet_link, sr_title
+    FROM sheets_links
+    WHERE asin = #{asin} AND shop_title = #{shopTitle}
+  </select>
+
+  <select id="getAll" resultMap="sheetsLinkResultMap">
+    SELECT * FROM sheets_links
+  </select>
+</mapper>

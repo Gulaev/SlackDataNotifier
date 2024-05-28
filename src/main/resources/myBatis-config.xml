@@ -19,5 +19,6 @@
 
   <mappers>
     <mapper resource="mapper/productMapper.xml"/>
+    <mapper resource="mapper/sheetsLinkMapper.xml"/>
   </mappers>
 </configuration>

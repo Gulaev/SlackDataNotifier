@@ -3,6 +3,7 @@ package com.gulaev.service.analysis;
 import com.gulaev.dao.implementation.AmazonProductRepositoryImpl;
 import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
+import com.gulaev.service.LostProductService;
 import com.gulaev.service.SendMessageService;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,7 @@ public class ProductAnalizator {
   private SendMessageService sendMessageService;
   private RankAnalysisService rankAnalysisService;
   private BestSellerRankAnalysisService sellerRankAnalysisService;
+  private LostProductService lostProductService;
 
   public ProductAnalizator() {
     this.rateCountAnalysisService = new RateCountAnalysisService();
@@ -34,9 +36,14 @@ public class ProductAnalizator {
     this.sessionAnalysisService = new SessionAnalysisService();
     this.rankAnalysisService = new RankAnalysisService();
     this.sellerRankAnalysisService = new BestSellerRankAnalysisService();
+    this.lostProductService = new LostProductService();
+
   }
 
   public void startAnalysis() {
+    Map<Boolean, String> lostProduct = lostProductService.findLostProduct();
+    if (lostProduct.containsKey(true))
+      sendMessageService.sendMessage(lostProduct.get(true));
     analysisAmazonUs();
     analysisZoroms();
     analysisKivals();

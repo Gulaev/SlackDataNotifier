@@ -3,7 +3,6 @@ package com.gulaev.service.analysis;
 import com.gulaev.dao.implementation.AmazonProductRepositoryImpl;
 import com.gulaev.dao.repository.AmazonProductRepository;
 import com.gulaev.entity.AmazonProduct;
-import com.gulaev.service.SendMessageService;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

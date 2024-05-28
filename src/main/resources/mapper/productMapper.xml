@@ -22,7 +22,7 @@
   <select id="findProductsByDateRange" resultMap="productResultMap">
     SELECT *
     FROM products
-    WHERE DATE(uploaded_on) BETWEEN DATE(#{startDate}) AND DATE(#{endDate})
+    WHERE DATE(uploaded_on) = DATE(#{startDate})
   </select>
 
   <select id="getProductsByDate" resultMap="productResultMap">
