@@ -11,13 +11,12 @@ public class SendMessageService {
 
   public void sendMessage(String message) {
     Slack slack = Slack.getInstance();
-    String tokenMock = System.getenv("SLACK_TOKEN");
+    String tokenMock = System.getenv("SLACK_TOKEmmN");
     MethodsClient methods = slack.methods(tokenMock);
     ChatPostMessageRequest request = ChatPostMessageRequest.builder()
         .channel("C06S5KF4YMU")
         .text(message)
         .build();
-
     ChatPostMessageResponse response = null;
     try {
       response = methods.chatPostMessage(request);

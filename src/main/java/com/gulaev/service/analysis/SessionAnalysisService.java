@@ -35,7 +35,7 @@ public class SessionAnalysisService {
 
     HashMap<Boolean, String> answer = new HashMap<>();
     List<Double> sessionByPreviousDate = new ArrayList<>();
-    String currentProductSessionString = currentProduct.getSession();
+    String currentProductSessionString = currentProduct.getSessions();
     if (currentProductSessionString == null || currentProductSessionString.isEmpty()) {
       return Collections.singletonMap(false, "Current product session data is not available.");
     }
@@ -50,7 +50,7 @@ public class SessionAnalysisService {
           currentUploadedDate, currentProduct);
 
       previousDateProduct.ifPresent(p -> {
-        String session = p.getSession();
+        String session = p.getSessions();
         if (session != null && !session.isEmpty()) {
           try {
             sessionByPreviousDate.add(Double.parseDouble(session));
@@ -82,7 +82,7 @@ public class SessionAnalysisService {
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedMessage = String.format(messageFormat, Math.abs(percentageChange),
-            currentProduct.getSession());
+            currentProduct.getSessions());
         answer.put(true, formattedMessage);
       } else {
         String message = "Session changes are within normal range.";

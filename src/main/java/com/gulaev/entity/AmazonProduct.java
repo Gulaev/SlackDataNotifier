@@ -17,7 +17,7 @@ public class AmazonProduct {
   private String unitsTotal;
   private String shopTitle;
   private String sheetLink;
-  private String session;
+  private String sessions;
   private String rank;
   private String bestSellerRank;
 }

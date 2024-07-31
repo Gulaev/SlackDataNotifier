@@ -53,7 +53,7 @@ public class LostProductService {
 
     private boolean containsProduct(List<AmazonProduct> products, SheetsLink link) {
         for (AmazonProduct product : products) {
-            if (link.getAsin().equals(product.getAsin()) || link.getSrTitle().equals(product.getTitle())) {
+            if (link.getAsin().equals(product.getAsin()) && link.getShopTitle().equals(product.getShopTitle())) {
                 return true;
             }
         }
