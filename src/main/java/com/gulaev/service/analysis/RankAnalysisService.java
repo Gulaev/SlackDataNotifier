@@ -38,7 +38,7 @@ public class RankAnalysisService {
           message = String.format("\uD83D\uDEA8 Rank lost \n");
           answer.put(true, message);
         } else {
-          message = String.format("⚡ Product %s \n", currentProduct.getRank());
+          message = String.format("\uD83C\uDFC6\uD83C\uDFC6\uD83C\uDFC6\uD83C\uDFC6\uD83C\uDFC6 Product %s \n", currentProduct.getRank());
           answer.put(true, message);
         }
       } else {
