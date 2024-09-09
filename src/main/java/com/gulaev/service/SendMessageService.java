@@ -11,7 +11,7 @@ public class SendMessageService {
 
   public void sendMessage(String message) {
     Slack slack = Slack.getInstance();
-    String tokenMock = System.getenv("SLACK_TOKEmmN");
+   String tokenMock = "";
     MethodsClient methods = slack.methods(tokenMock);
     ChatPostMessageRequest request = ChatPostMessageRequest.builder()
         .channel("C06S5KF4YMU")

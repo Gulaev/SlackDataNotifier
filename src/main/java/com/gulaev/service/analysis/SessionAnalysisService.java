@@ -39,31 +39,34 @@ public class SessionAnalysisService {
     if (currentProductSessionString == null || currentProductSessionString.isEmpty()) {
       return Collections.singletonMap(false, "Current product session data is not available.");
     }
-    Double currentProductSession = Double.parseDouble(currentProductSessionString);
-    Double averageSessionsTotalByPreviousDates;
-    Date currentUploadedDate = dayBeforeAfterAfter;
+    Double currentProductSession;
+    try {
+      currentProductSession = Double.parseDouble(currentProductSessionString);
+      Double averageSessionsTotalByPreviousDates;
+      Date currentUploadedDate = dayBeforeAfterAfter;
 
-    // Collect units sold on the previous dates
-    for (int i = 1; i <= 3; i++) {
-      currentUploadedDate = productRepository.getMaxDateBeforeInputDate(currentUploadedDate);
-      Optional<AmazonProduct> previousDateProduct = productRepository.findProductByDate(
-          currentUploadedDate, currentProduct);
+      // Collect units sold on the previous dates
+      for (int i = 1; i <= 3; i++) {
+        currentUploadedDate = productRepository.getMaxDateBeforeInputDate(currentUploadedDate);
+        Optional<AmazonProduct> previousDateProduct = productRepository.findProductByDate(
+            currentUploadedDate, currentProduct);
 
-      previousDateProduct.ifPresent(p -> {
-        String session = p.getSessions();
-        if (session != null && !session.isEmpty()) {
-          try {
-            sessionByPreviousDate.add(Double.parseDouble(session));
-          } catch (NumberFormatException e) {
+        previousDateProduct.ifPresent(p -> {
+          String session = p.getSessions();
+          if (session != null && !session.isEmpty()) {
+            try {
+              sessionByPreviousDate.add(Double.parseDouble(session));
+            } catch (NumberFormatException e) {
 
+            }
           }
-        }
-      });
-    }
+        });
+      }
 
-    if (sessionByPreviousDate.isEmpty()) {
-      return Collections.singletonMap(false, "No previous session data available for calculation.");
-    }
+      if (sessionByPreviousDate.isEmpty()) {
+        return Collections.singletonMap(false,
+            "No previous session data available for calculation.");
+      }
       // Calculate the average units sold in previous dates
       averageSessionsTotalByPreviousDates = sessionByPreviousDate.stream()
           .mapToDouble(Double::doubleValue).average().orElse(Double.NaN);
@@ -90,5 +93,11 @@ public class SessionAnalysisService {
         return answer;
       }
       return answer;
+    } catch (Exception e) {
+      answer.put(false, "No session for today");
     }
+    String message = "Session changes are within normal range.";
+    answer.put(false, message);
+    return answer;
   }
+}

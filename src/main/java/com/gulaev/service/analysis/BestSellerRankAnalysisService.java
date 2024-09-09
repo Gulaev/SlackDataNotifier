@@ -43,10 +43,10 @@ public class BestSellerRankAnalysisService {
         int rankChange = previousRank - currentRank;
         if (Math.abs(rankChange) >= 5) {
           if (rankChange > 0) {
-            answerText.append(String.format("Sharp decrease for %s = %s(-%s) \n", category,
+            answerText.append(String.format("Substantial decrease for %s = %s(-%s) \n", category,
                 currentRank, Math.abs(rankChange)));
           } else {
-            answerText.append(String.format("Sharp increase for %s = %s(+%s) \n", category,
+            answerText.append(String.format("Substantial increase for %s = %s(+%s) \n", category,
                 currentRank, Math.abs(rankChange)));
           }
         }
@@ -65,7 +65,7 @@ public class BestSellerRankAnalysisService {
 
   public static Map<String, Integer> parseCategories(String text) {
     Map<String, Integer> categories = new HashMap<>();
-    String[] lines = text.split("/n");
+    String[] lines = text.split("/n");  
     for (String line: lines) {
       String[] numberAndTitle = line.split(" in ");
       String number = numberAndTitle[0];
